@@ -18,20 +18,27 @@
                     <h3>Registration</h3>
                   </div>
                   <form >
-                    <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-                      <strong>{{error}}</strong>
+                    <div v-if="success" class="alert alert-success alert-dismissible fade show" role="alert">
+                      <strong>{{success}}</strong>
                     </div>
                     <div class="form-group">
-                      <input v-model="credential.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+                      <input v-model="register.name" v-validate="'required'"  type="text" class="form-control" id="Name" placeholder="Name">
                     </div>
                     <div class="form-group">
-                      <input v-model="credential.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                      <input v-model="register.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
                     </div>
-                    <button v-show="!loader" @click="loginNow()" type="button" class="btn btn-success">Login Now</button>
-                    <button v-show="loader" type="button" class="btn btn-success"><i class="fas fa-cog animation"></i> Login...</button>
+                    <div class="form-group">
+                      <input v-model="register.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <input v-model="register.confirm_password" v-validate="'required'" type="password" name="Confirm password" class="form-control" id="Password" placeholder="Confirm password">
+                    </div>
+                    <button v-show="!loader && !success" @click="registerNow()" type="button" class="btn btn-success">Register Now</button>
+                    <button v-show="loader" type="button" class="btn btn-success"><i class="fas fa-cog animation"></i> Register...</button>
+                    <button v-show="success" type="button" class="btn btn-success"><i class="fas fa-check"></i> Register</button>
                     <div>
                         <div  class="col-md-12 text-center bottom-text">
-                          <p>If you have no account <span @click="go()" style="text-decoration: underline;cursor:pointer;border-bottom:underline;">Registration now</span></p>
+                          <p>Already have a account. <span @click="go()" style="text-decoration: underline;cursor:pointer;border-bottom:underline;">Login</span></p>
                         </div>
                       </div>
                   </form>
@@ -58,25 +65,29 @@ export default {
       check:false,
       loader:false,
       serveErrors:'',
-      error:'',
-      credential:{
+      success:'',
+      register:{
+        name:'',
         email:'',
         password:'',
+        confirm_password:''
       }
     }
   },
   methods:{
-    loginNow(){
+    registerNow(){
       this.$validator.validateAll().then( result =>{
           if(result){
-            var data = this.credential
+            var data = this.register
             this.loader = true
-            this.$store.dispatch('LOGIN_USER',data).then(response=>{
+            this.$store.dispatch('REGISTER_USER',data).then(response=>{
+              this.success = response.data.success
               this.loader = false
-              this.$router.push('/product') 
+              setTimeout(()=>{
+                this.$router.push('/login')
+              },2000)  
             })
             .catch(error=>{
-              this.error = error.response.data.error
               this.serveErrors = error.response.data.errors
               this.loader=false
               this.check=false      
@@ -88,7 +99,7 @@ export default {
       delete this.serveErrors[name];
     },
     go(){
-      this.$router.push('/registration');
+      this.$router.push('/login');
     }
   },
   
@@ -108,7 +119,9 @@ export default {
       background-size: cover;
       /* overflow: auto; */
   }
- 
+  .left-side{
+    /* width: 60%; */
+  }
   .right-side{
     background-image: linear-gradient(to bottom, #ffffff, transparent);
     position: relative;
@@ -134,6 +147,7 @@ export default {
   }
   .heading h3{
     color: #5a8f32;
+    /* background: rgb(209, 247, 234); */
     border-radius: 20px;
   }
  

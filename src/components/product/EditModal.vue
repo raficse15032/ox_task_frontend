@@ -99,7 +99,9 @@ export default {
             this.url = URL.createObjectURL(e.target.files[0])
         },
         removeImage () {
-            this.$refs.image.value = null;
+            if(!this.not_edit_image){
+                this.$refs.image.value = null;
+            }  
             this.product.image = ''
             this.url = ''
             this.select_img = false

@@ -10,7 +10,7 @@
                         <h4>Product list</h4>
                     </div>
                     <div class="col-md-3" style="margin:0;padding:0;text-align:right">
-                        <button class="btn btn-danger"><i class="fas fa-power-off"></i> Logout</button> 
+                        <button @click="logout()" class="btn btn-danger"><i class="fas fa-power-off"></i> Logout</button> 
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             </table>
             <pagination :data="products" @pagination-change-page="getProducts"></pagination>
         </div>
-        
+        <loader v-show="loading"></loader>
         <addModal ref="add"></addModal>
         <editModal ref="edit"></editModal>
         <viewModal ref="view"></viewModal>
@@ -47,17 +47,25 @@
 import addModal from '@/components/product/AddModal'
 import editModal from '@/components/product/EditModal'
 import viewModal from '@/components/product/ViewModal'
+import loader from '@/components/loader/Loader'
 import {mapGetters} from "vuex"
 import pagination from 'laravel-vue-pagination'
+import Loader from '../../components/loader/Loader.vue'
 
 export default {
+    data(){
+        return{
+            loading:false
+        }
+    },
     methods:{
         getProducts(page=1){
+            this.loading = true;
             this.$store.dispatch('ALL_PRODUCT',page).then(response=>{
-                // this.loading=false;
+                this.loading = false;
             })
             .catch(error=>{
-                // this.loading=true;        
+                this.loading = false;        
             }); 
         },
         openAddModal(){
@@ -81,13 +89,9 @@ export default {
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                 if (result.isConfirmed) {
-                        self.$swal({
-                            showLoaderOnConfirm: true,
-                        })
+                        self.loading = true
                         this.$store.dispatch('DELETE_PRODUCT',{id,index}).then(response=>{
-                        self.$swal({
-                            showLoaderOnConfirm: false,
-                        })
+                        self.loading = false
                         self.$swal(
                             'Deleted!',
                             'Your product has been deleted.',
@@ -104,6 +108,10 @@ export default {
                     
                 }
             })
+        },
+        logout(){
+            this.$auth.logout()
+            this.$router.push('/login')
         }
     },
     mounted(){
@@ -116,6 +124,7 @@ export default {
         addModal,
         editModal,
         viewModal,
+        loader,
         pagination
     }
 }
