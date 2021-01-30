@@ -1,11 +1,10 @@
 <template>
     <div>
-        <p>Product</p>
-        <div class="container">
+        <div class="container mt-3">
             <div class="col-md-12 mb-3">
                 <div class="row">
                     <div class="col-md-3" style="margin:0;padding:0;text-align:left">
-                        <button class="btn btn-primary"><i class="fas fa-plus"></i> Product</button>
+                        <button @click="openAddModal()" class="btn btn-primary"><i class="fas fa-plus"></i> Product</button>
                     </div>
                     <div class="col-md-6 text-center">
                         <h4>Product list</h4>
@@ -32,25 +31,26 @@
                         <td><img :src="$axios.defaults.baseURL+'/image/product/'+product.image" class="product-image" :alt="product.title"></td>
                         <td>{{product.title}}</td>
                         <td>{{product.price}}</td>
-                        <td><i class="far fa-edit pointer"></i> <i class="far fa-eye pointer"></i> <i class="far fa-trash-alt pointer"></i></td>
+                        <td><button class="btn btn-sm" @click="openEditModal(product,key)"><i class="far fa-edit"></i></button><button @click="openViewModal(product)" class="btn btn-sm"><i class="far fa-eye"></i></button><button @click="deleteProduct(product.id,key)" class="btn btn-sm"><i class="far fa-trash-alt"></i></button></td>
                     </tr>
                 </tbody>
             </table>
             <pagination :data="products" @pagination-change-page="getProducts"></pagination>
         </div>
         
-        <addEditModal></addEditModal>
+        <addModal ref="add"></addModal>
+        <editModal ref="edit"></editModal>
+        <viewModal ref="view"></viewModal>
     </div>
 </template>
 <script>
-import addEditModal from '@/components/product/AddEditModal'
+import addModal from '@/components/product/AddModal'
+import editModal from '@/components/product/EditModal'
+import viewModal from '@/components/product/ViewModal'
 import {mapGetters} from "vuex"
 import pagination from 'laravel-vue-pagination'
+
 export default {
-    components:{
-        addEditModal,
-        pagination
-    },
     methods:{
         getProducts(page=1){
             this.$store.dispatch('ALL_PRODUCT',page).then(response=>{
@@ -59,6 +59,51 @@ export default {
             .catch(error=>{
                 // this.loading=true;        
             }); 
+        },
+        openAddModal(){
+            this.$refs.add.openAddModal()
+        },
+        openEditModal(data,index){
+            this.$refs.edit.openEditModal(data,index)
+        },
+        openViewModal(product){
+            this.$refs.view.openViewModal(product)
+        },
+        deleteProduct(id,index){
+            var self = this
+            this.$swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                        self.$swal({
+                            showLoaderOnConfirm: true,
+                        })
+                        this.$store.dispatch('DELETE_PRODUCT',{id,index}).then(response=>{
+                        self.$swal({
+                            showLoaderOnConfirm: false,
+                        })
+                        self.$swal(
+                            'Deleted!',
+                            'Your product has been deleted.',
+                            'success'
+                        )
+                    })
+                    .catch(error=>{   
+                        self.$swal({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        })    
+                    }); 
+                    
+                }
+            })
         }
     },
     mounted(){
@@ -67,6 +112,12 @@ export default {
     computed: {
         ...mapGetters(["products"]),
     },
+    components:{
+        addModal,
+        editModal,
+        viewModal,
+        pagination
+    }
 }
 </script>
 <style scoped>

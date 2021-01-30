@@ -33,5 +33,8 @@ export default {
   .pointer{
     cursor: pointer;
   }
+  .red{
+    color:red
+  }
 </style>
 

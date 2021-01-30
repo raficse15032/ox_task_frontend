@@ -26,7 +26,7 @@ const actions = {
     },
     [ADD_PRODUCT]({commit},data) {
         return new Promise((resolve, reject) => {
-            this.$axios.post("/api/product",data).then(response => {
+            axios.post("/api/product",data).then(response => {
                 commit(AFTER_ADD_PRODUCT,response.data);
                 resolve(response);
             })
@@ -39,7 +39,7 @@ const actions = {
     },
     [UPDATE_PRODUCT]({commit},data) {
         return new Promise((resolve, reject) => {
-            this.$axios.put("/api/product",data.data).then(response => {
+            axios.put("/api/product",data.data).then(response => {
                 var update_data = response.data
                 var index = data.index
                 commit("AFTER_UPDATE_PRODUCT",{update_data,index});
@@ -51,10 +51,10 @@ const actions = {
             });
         });
     },
-    [DELETE_PRODUCT]({commit},id_index) {
+    [DELETE_PRODUCT]({commit},data) {
         return new Promise((resolve, reject) => {
-            this.$axios.delete("/api/product/"+id_index.id).then(response => {
-                commit(AFTER_DELETE_PRODUCT,id_index.index);
+            axios.delete("/api/product/"+data.id).then(response => {
+                commit(AFTER_DELETE_PRODUCT,data.index);
                 resolve(response);
             })
             .catch(function(error) {
@@ -70,16 +70,13 @@ const mutations = {
     },
     [AFTER_DELETE_PRODUCT](state,index){
         state.products.data.splice(index,1)
-        // iziToast.success({position:'topRight',title:'Ok',message:"PRODUCT Delated Successsfully"})
     },
     [AFTER_ADD_PRODUCT](state,data){
         state.products.data.unshift(data)
-        // iziToast.success({position:'topRight',title:'Ok',message:"PRODUCT Added Successsfully"})
     },
     [AFTER_UPDATE_PRODUCT](state,payload){
         state.products.data.splice(payload.index,0,payload.update_data)
         state.products.data.splice(payload.index+1,1)
-        // iziToast.success({position:'topRight',title:'Ok',message:"PRODUCT Updated Successsfully"})
     },
     
 };

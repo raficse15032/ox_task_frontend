@@ -9,8 +9,13 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 window.jQuery = require('jquery')
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 import axios from 'axios'
 import Auth from './packages/Auth'
+
+Vue.use(VueSweetalert2)
 Vue.use(Auth)
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
