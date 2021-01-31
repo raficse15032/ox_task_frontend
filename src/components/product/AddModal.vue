@@ -11,18 +11,20 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form ref="observer">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="title">Title</label>
-                                            <input ref="title" type="text" v-validate="'required'" name="title" v-model="product.title" class="form-control" id="title" placeholder="title">
-                                            <span class="red">{{ errors.first('title') }}</span>
+                                            <input @keyup="vStatusOnAndRemoveError('title')" type="text" v-validate="'required'" name="title" v-model="product.title" class="form-control" id="title" placeholder="title">
+                                            <span v-if="validation_status" class="red">{{ errors.first('title') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.title" :key="key">{{error}}</span></p>
                                         </div>
                                         <div class="form-group">
                                             <label for="price">Price</label>
-                                            <input ref="price" v-validate="'required'" min="0"  type="number" name="price" v-model="product.price" class="form-control" id="price" placeholder="price">
-                                            <span class="red">{{ errors.first('price') }}</span>
+                                            <input @keyup="vStatusOnAndRemoveError('price')"  v-validate="'required'" min="0"  type="number" name="price" v-model="product.price" class="form-control" id="price" placeholder="price">
+                                            <span v-if="validation_status"  class="red">{{ errors.first('price') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.price" :key="key">{{error}}</span></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -32,8 +34,9 @@
                                                 <img  :src="url" class="fitimage" />
                                             </div>
                                             <div v-show="!select_img" class="image_upload" @click="$refs.image.click()">
-                                                <p>Image</p>
+                                                <p class="mt-4"><b>Upload image</b></p>
                                                 <i class="fa fa-cloud-upload-alt"></i>
+                                                <p>Image should be less than 1024 KB</p>
                                                 <input
                                                     v-validate="'required|image|size:1024'"
                                                     name="image"
@@ -45,13 +48,15 @@
                                                 />
                                             </div>
                                             <span class="red">{{ errors.first('image') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.image" :key="key">{{error}}</span></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea ref="description" name="description" v-validate="'required'" id="description" v-model="product.description" class="form-control"></textarea>
-                                    <span class="red">{{ errors.first('description') }}</span>
+                                    <vue-editor @keyup="vStatusOnAndRemoveError('description')" name="description" v-validate="'required'" v-model="product.description"></vue-editor>
+                                    <span v-if="validation_status"  class="red">{{ errors.first('description') }}</span>
+                                    <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.description" :key="key">{{error}}</span></p>
                                 </div>
                             </form>
                         </div>
@@ -70,11 +75,12 @@
 import Vue from 'vue'
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate)
-
+import { VueEditor } from "vue2-editor";
 export default {
     data(){
         return{
             modal:false,
+            validation_status:false,
             index:'',
             url:'',
             select_img:false,
@@ -84,7 +90,8 @@ export default {
                 price:'',
                 description:''
             },
-            loading:false
+            loading:false,
+            serveErrors:''
         }
     },
     methods:{
@@ -96,6 +103,7 @@ export default {
                 this.select_img = true
             }
             this.url = URL.createObjectURL(e.target.files[0])
+            delete this.serveErrors['image']
         },
         removeImage () {
             this.$refs.image.value = null;
@@ -104,12 +112,21 @@ export default {
             this.select_img = false
         },
         saveProduct(){
+            this.validation_status = true
             this.$validator.validateAll().then( result =>{
                 if(result){
                     this.loading=true;
                     this.$store.dispatch('ADD_PRODUCT',this.product).then(response=>{
-                        this.loading = false;
-                        this.modal = false;
+                        this.loading = false
+                        this.modal = false
+                        this.validation_status = false
+
+                        this.$refs.image.value = null
+                        this.select_img = false
+                        this.product.title = ''
+                        this.product.price = ''
+                        this.product.description = ''
+                        
                         this.$swal(
                             'Saved!',
                             'Your product has been saved.',
@@ -118,6 +135,7 @@ export default {
                     })
                     .catch(error=>{
                         this.loading=false;
+                        this.serveErrors = error.response.data.errors
                         this.$swal({
                             icon: 'error',
                             title: 'Oops...',
@@ -129,14 +147,18 @@ export default {
         },
         openAddModal(){
             this.modal = true
-            this.$refs.title.value = null
-            this.$refs.price.value = null
-            this.$refs.image.value = null
-            this.$refs.description.value = null
+            
+        },
+        vStatusOnAndRemoveError(name){
+            this.validation_status = true
+            delete this.serveErrors[name];
         },
         close(){
             this.modal = false
         }
+    },
+    components:{
+        VueEditor
     }
 }
 </script>
@@ -197,3 +219,4 @@ export default {
     }
     
 </style>
+

@@ -16,13 +16,15 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="title">Title</label>
-                                            <input ref="title" type="text" v-validate="'required'" name="title" v-model="product.title" class="form-control" id="title" placeholder="title">
+                                            <input @keyup="removeError('title')" ref="title" type="text" v-validate="'required'" name="title" v-model="product.title" class="form-control" id="title" placeholder="title">
                                             <span class="red">{{ errors.first('title') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.title" :key="key">{{error}}</span></p>
                                         </div>
                                         <div class="form-group">
                                             <label for="price">Price</label>
-                                            <input ref="price" v-validate="'required'" min="0"  type="number" name="price" v-model="product.price" class="form-control" id="price" placeholder="price">
+                                            <input @keyup="removeError('price')" ref="price" v-validate="'required'" min="0"  type="number" name="price" v-model="product.price" class="form-control" id="price" placeholder="price">
                                             <span class="red">{{ errors.first('price') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.price" :key="key">{{error}}</span></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -32,8 +34,9 @@
                                                 <img  :src="url" class="fitimage" />
                                             </div>
                                             <div v-show="!select_img" class="image_upload" @click="$refs.image.click()">
-                                                <p>Image</p>
+                                                <p class="mt-4"><b>Upload image</b></p>
                                                 <i class="fa fa-cloud-upload-alt"></i>
+                                                <p>Image should be less than 1024 KB</p>
                                                 <input v-if="!not_edit_image"
                                                     v-validate="'required|image|size:1024'"
                                                     name="image"
@@ -45,13 +48,15 @@
                                                 />
                                             </div>
                                             <span class="red">{{ errors.first('image') }}</span>
+                                            <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.image" :key="key">{{error}}</span></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <textarea ref="description" name="description" v-validate="'required'" id="description" v-model="product.description" class="form-control"></textarea>
+                                    <vue-editor @keyup="removeError('description')"  name="description" v-validate="'required'" v-model="product.description"></vue-editor>
                                     <span class="red">{{ errors.first('description') }}</span>
+                                    <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.description" :key="key">{{error}}</span></p>
                                 </div>
                             </form>
                         </div>
@@ -70,7 +75,7 @@
 import Vue from 'vue'
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate)
-
+import { VueEditor } from "vue2-editor";
 export default {
     data(){
         return{
@@ -85,7 +90,8 @@ export default {
                 price:'',
                 description:''
             },
-            loading:false
+            loading:false,
+            serveErrors:''
         }
     },
     methods:{
@@ -97,6 +103,7 @@ export default {
                 this.select_img = true
             }
             this.url = URL.createObjectURL(e.target.files[0])
+            delete this.serveErrors['image']
         },
         removeImage () {
             if(!this.not_edit_image){
@@ -126,7 +133,8 @@ export default {
                         )
                     })
                     .catch(error=>{
-                        this.loading=false;
+                        this.loading=false
+                        this.serveErrors = error.response.data.errors
                         this.$swal({
                             icon: 'error',
                             title: 'Oops...',
@@ -150,7 +158,13 @@ export default {
         },
         close(){
             this.modal = false
+        },
+        removeError(name){
+            delete this.serveErrors[name];
         }
+    },
+    components:{
+        VueEditor
     }
 }
 </script>

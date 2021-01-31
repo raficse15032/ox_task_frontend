@@ -25,14 +25,14 @@
                                     <div class="col-md-6">
                                         <div class="mt-1 pt-1">
                                             <div class="image_upload">
-                                                <img class="fitimage" :src="$axios.defaults.baseURL+'/image/product/'+product.image" :alt="product.title">
+                                                <img v-if="product.image" class="fitimage" :src="$axios.defaults.baseURL+'/image/product/'+product.image" :alt="product.title">
                                             </div>
                                             
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group mt-2 pt-3">
-                                    {{product.description}}
+                                    <p v-html="product.description"></p> 
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <p><b>Created By: </b><span v-if="product.created_by">{{product.created_by.name}}</span></p>
+                                            <p><b>Updated By: </b><span v-if="product.updated_by">{{product.updated_by.name}}</span></p>
                                         </div>
                                     </div>
                                 </div>

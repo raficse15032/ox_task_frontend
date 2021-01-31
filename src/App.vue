@@ -8,8 +8,20 @@
 
 export default {
   name: 'App',
-  components: {
-  }
+  mounted(){
+    this.refreshToken();
+  },
+  methods:{
+    refreshToken() {
+      if(this.$auth.isAuthenticated()){
+        var diff = this.$auth.getExpiration() - Date.now();
+        if(diff<(1*60*1000)){
+          this.$store.dispatch('REFRESH_TOKEN')
+        }
+      }
+      setTimeout(this.refreshToken,1000);
+    }
+  },
 }
 </script>
 <style>

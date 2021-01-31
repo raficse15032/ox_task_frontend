@@ -21,7 +21,7 @@
                         <th scope="col">Serial</th>
                         <th scope="col">Image</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Price</th>
+                        <th class="text-right" scope="col">Price </th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -30,8 +30,14 @@
                         <th scope="row">{{products.from+key}}</th>
                         <td><img :src="$axios.defaults.baseURL+'/image/product/'+product.image" class="product-image" :alt="product.title"></td>
                         <td>{{product.title}}</td>
-                        <td>{{product.price}}</td>
+                        <td class="text-right">{{product.price}}</td>
                         <td><button class="btn btn-sm" @click="openEditModal(product,key)"><i class="far fa-edit"></i></button><button @click="openViewModal(product)" class="btn btn-sm"><i class="far fa-eye"></i></button><button @click="deleteProduct(product.id,key)" class="btn btn-sm"><i class="far fa-trash-alt"></i></button></td>
+                    </tr>
+                    <tr v-show="!loading && products.data.length == 0">
+                        <td class="no-product text-center pt-4" colspan="5">
+                            <i class="fas fa-box-open"></i>
+                            <p>No product found</p>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -110,8 +116,16 @@ export default {
             })
         },
         logout(){
-            this.$auth.logout()
-            this.$router.push('/login')
+            this.loading = true;
+            this.$store.dispatch('LOGOUT_USER').then(response=>{
+              this.loading = false 
+              this.$auth.logout()
+              this.$router.push('/login')
+            })
+            .catch(error=>{
+              this.loading=false     
+            });
+            
         }
     },
     mounted(){
@@ -134,5 +148,12 @@ export default {
         height: 50px;
         width: 60px;
     }
-    
+    .no-product{
+        align-self: center;
+        font-size: 20px;
+        color: #888;
+    }
+    .fa-w-20{
+        font-size: 40px;
+    }
 </style>

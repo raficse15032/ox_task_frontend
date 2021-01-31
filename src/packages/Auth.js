@@ -22,6 +22,9 @@ export default function(Vue){
                 return token
             }
         },
+        getExpiration () {
+            return parseInt(localStorage.getItem('expiration'));
+        },
         isAuthenticated () {
             if(this.getToken())
                 return true

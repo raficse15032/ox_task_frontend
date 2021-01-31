@@ -22,13 +22,14 @@
                       <strong>{{error}}</strong>
                     </div>
                     <div class="form-group">
-                      <input v-model="credential.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+                      <input @keyup.enter="trigger()" @keyup="removeError()" v-model="credential.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
                       <span class="red">{{ errors.first('Email') }}</span>
                     </div>
                     <div class="form-group">
-                      <input v-model="credential.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                      <input @keyup.enter="trigger()" @keyup="removeError()" v-model="credential.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
                       <span class="red">{{ errors.first('Password') }}</span>
                     </div>
+                    <input  @click="loginNow()" ref="enter_press" type="hidden">
                     <button v-show="!loader" @click="loginNow()" type="button" class="btn btn-success">Login Now</button>
                     <button v-show="loader" type="button" class="btn btn-success"><i class="fas fa-cog animation"></i> Login...</button>
                     <div>
@@ -59,7 +60,6 @@ export default {
     return{
       check:false,
       loader:false,
-      serveErrors:'',
       error:'',
       credential:{
         email:'',
@@ -86,8 +86,11 @@ export default {
           }  
       })
     },
-    removeError(name){
-      delete this.serveErrors[name];
+    removeError(){
+      this.error = ''
+    },
+    trigger () {
+        this.$refs.enter_press.click()
     },
     go(){
       this.$router.push('/registration');
