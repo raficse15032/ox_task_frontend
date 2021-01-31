@@ -10,10 +10,10 @@
             <div class="text-center">
               <div  class="card ">
                 <div style="height: 100vh;">
-                  <div style="width:100%;color:#888" class="text-center logo pt-4 mt-2">
+                  <!-- <div style="width:100%;color:#888" class="text-center logo pt-4 mt-2">
                       <img height="50px;" src="https://wedevs.com/img/logos/wedevs/wedevs-logo-colored.svg" alt="">
                       <h5>Assignment</h5>
-                  </div>
+                  </div> -->
                   <div style="width:100%" class="text-center heading">
                     <h3>Registration</h3>
                   </div>
@@ -22,16 +22,24 @@
                       <strong>{{success}}</strong>
                     </div>
                     <div class="form-group">
-                      <input v-model="register.name" v-validate="'required'"  type="text" class="form-control" id="Name" placeholder="Name">
+                      <input @keyup="removeError('name')" name="Name" v-model="register.name" v-validate="'required'"  type="text" class="form-control" id="Name" placeholder="Name">
+                      <span class="red">{{ errors.first('Name') }}</span>
+                      <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.name" :key="key">{{error}}</span></p>
                     </div>
                     <div class="form-group">
-                      <input v-model="register.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+                      <input @keyup="removeError('email')"  v-model="register.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+                      <span class="red">{{ errors.first('Email') }}</span>
+                      <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.email" :key="key">{{error}}</span></p>
                     </div>
                     <div class="form-group">
-                      <input v-model="register.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                      <input @keyup="removeError('password')" v-model="register.password" v-validate="'required|min:6'" type="password" ref="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                      <span class="red">{{ errors.first('Password') }}</span>
+                      <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.password" :key="key">{{error}}</span></p>
                     </div>
                     <div class="form-group">
-                      <input v-model="register.confirm_password" v-validate="'required'" type="password" name="Confirm password" class="form-control" id="Password" placeholder="Confirm password">
+                      <input @keyup="removeError('confirm_password')" v-model="register.confirm_password" v-validate="'required|confirmed:password'" type="password" name="Confirm password" class="form-control" id="Password" placeholder="Confirm password">
+                      <span class="red">{{ errors.first('Confirm password') }}</span>
+                      <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.confirm_password" :key="key">{{error}}</span></p>
                     </div>
                     <button v-show="!loader && !success" @click="registerNow()" type="button" class="btn btn-success">Register Now</button>
                     <button v-show="loader" type="button" class="btn btn-success"><i class="fas fa-cog animation"></i> Register...</button>

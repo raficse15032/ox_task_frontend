@@ -15,7 +15,7 @@
                       <h5>Assignment</h5>
                   </div>
                   <div style="width:100%" class="text-center heading">
-                    <h3>Registration</h3>
+                    <h3>Login</h3>
                   </div>
                   <form >
                     <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -23,15 +23,17 @@
                     </div>
                     <div class="form-group">
                       <input v-model="credential.email" v-validate="'required'" type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+                      <span class="red">{{ errors.first('Email') }}</span>
                     </div>
                     <div class="form-group">
                       <input v-model="credential.password" v-validate="'required'" type="password" name="Password" class="form-control" id="Password" placeholder="Password">
+                      <span class="red">{{ errors.first('Password') }}</span>
                     </div>
                     <button v-show="!loader" @click="loginNow()" type="button" class="btn btn-success">Login Now</button>
                     <button v-show="loader" type="button" class="btn btn-success"><i class="fas fa-cog animation"></i> Login...</button>
                     <div>
                         <div  class="col-md-12 text-center bottom-text">
-                          <p>If you have no account <span @click="go()" style="text-decoration: underline;cursor:pointer;border-bottom:underline;">Registration now</span></p>
+                          <p>If you don't have a account <span @click="go()" style="text-decoration: underline;cursor:pointer;border-bottom:underline;">Register now</span></p>
                         </div>
                       </div>
                   </form>

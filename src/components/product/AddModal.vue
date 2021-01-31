@@ -35,7 +35,7 @@
                                                 <p>Image</p>
                                                 <i class="fa fa-cloud-upload-alt"></i>
                                                 <input
-                                                    v-validate="'required|image|dimensions:400,400|size:1024'"
+                                                    v-validate="'required|image|size:1024'"
                                                     name="image"
                                                     type="file"
                                                     ref="image"
