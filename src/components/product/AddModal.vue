@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <vue-editor @keyup="vStatusOnAndRemoveError('description')" name="description" v-validate="'required'" v-model="product.description"></vue-editor>
+                                    <vue-editor @keypress="vStatusOnAndRemoveError('description')" name="description" v-validate="'required'" v-model="product.description"></vue-editor>
                                     <span v-if="validation_status"  class="red">{{ errors.first('description') }}</span>
                                     <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.description" :key="key">{{error}}</span></p>
                                 </div>
@@ -150,6 +150,7 @@ export default {
             
         },
         vStatusOnAndRemoveError(name){
+            alert("ol")
             this.validation_status = true
             delete this.serveErrors[name];
         },

@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <vue-editor @keyup="removeError('description')"  name="description" v-validate="'required'" v-model="product.description"></vue-editor>
+                                    <vue-editor @keypress="removeError('description')"  name="description" v-validate="'required'" v-model="product.description"></vue-editor>
                                     <span class="red">{{ errors.first('description') }}</span>
                                     <p class="red" v-if="serveErrors"><span v-for="(error,key) in serveErrors.description" :key="key">{{error}}</span></p>
                                 </div>
