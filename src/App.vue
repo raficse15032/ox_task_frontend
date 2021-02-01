@@ -19,7 +19,7 @@ export default {
           this.$store.dispatch('REFRESH_TOKEN')
         }
       }
-      setTimeout(this.refreshToken,1000);
+      setTimeout(this.refreshToken,45*1000);
     }
   },
 }
