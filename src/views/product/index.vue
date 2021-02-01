@@ -27,7 +27,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(product,key) in products.data" :key="key">
-                        <th scope="row">{{products.from+key}}</th>
+                        <th v-if="products.from" scope="row">{{products.from+key}}</th>
+                        <th v-else scope="row">{{key+1}}</th>
                         <td><img :src="$axios.defaults.baseURL+'/image/product/'+product.image" class="product-image" :alt="product.title"></td>
                         <td>{{product.title}}</td>
                         <td class="text-right">{{product.price}}</td>

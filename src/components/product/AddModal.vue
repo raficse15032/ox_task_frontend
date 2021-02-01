@@ -150,7 +150,6 @@ export default {
             
         },
         vStatusOnAndRemoveError(name){
-            alert("ol")
             this.validation_status = true
             delete this.serveErrors[name];
         },
