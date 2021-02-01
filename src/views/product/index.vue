@@ -105,7 +105,8 @@ export default {
                             'success'
                         )
                     })
-                    .catch(error=>{   
+                    .catch(error=>{  
+                        self.loading = false 
                         self.$swal({
                             icon: 'error',
                             title: 'Oops...',
