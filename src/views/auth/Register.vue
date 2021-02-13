@@ -11,7 +11,7 @@
               <div  class="card ">
                 <div style="height: 100vh;">
                   <div style="width:100%;color:#888" class="text-center logo pt-4 mt-2">
-                      <img height="50px;" src="https://wedevs.com/img/logos/wedevs/wedevs-logo-colored.svg" alt="">
+                      <img height="50px;" src="https://ois.edu.bd/wp-content/uploads/2019/09/Untitled-1.png" alt="">
                       <h5>Assignment</h5>
                   </div>
                   <div style="width:100%" class="text-center heading">

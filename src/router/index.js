@@ -4,7 +4,8 @@ import Router from 'vue-router'
 Vue.use(Router)
 const Registration = () => import('@/views/auth/Register')
 const Login = () => import('@/views/auth/Login')
-const Product = () => import('@/views/product')
+// const Product = () => import('@/views/product')
+const Account = () => import('@/views/account')
 
 
 export default new Router({
@@ -35,9 +36,9 @@ export default new Router({
       }
     },
     {
-      path: '/product',
-      name: 'Product',
-      component: Product,
+      path: '/account',
+      name: 'Account',
+      component: Account,
       meta:{
         forAuth:true
       }

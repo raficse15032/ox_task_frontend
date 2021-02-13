@@ -1,15 +1,8 @@
 
-# product
+# Bank Account
 
 > A Vue.js project
 
-## Live
-
-``` bash
-# Live server
-http://assignment.abumohammadrafi.xyz
-
-```
 
 ## Build Setup
 

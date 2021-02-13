@@ -1,7 +1,7 @@
-export const ALL_PRODUCT    = "ALL_PRODUCT"
-export const ADD_PRODUCT    = "ADD_PRODUCT"
-export const UPDATE_PRODUCT = "UPDATE_PRODUCT"
-export const DELETE_PRODUCT = "DELETE_PRODUCT"
+export const ALL_ACCOUNT    = "ALL_ACCOUNT"
+export const ADD_ACCOUNT    = "ADD_ACCOUNT"
+export const UPDATE_ACCOUNT = "UPDATE_ACCOUNT"
+export const DELETE_ACCOUNT = "DELETE_ACCOUNT"
 
 export const REGISTER_USER  = "REGISTER_USER"
 export const LOGIN_USER     = "LOGIN_USER"

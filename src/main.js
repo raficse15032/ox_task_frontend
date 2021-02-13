@@ -31,7 +31,7 @@ router.beforeEach(
     if(to.matched.some(record => record.meta.forVisitors)){
       if(Vue.auth.isAuthenticated())
         next({
-          path: '/product'
+          path: '/account'
         })
       else
         next()
